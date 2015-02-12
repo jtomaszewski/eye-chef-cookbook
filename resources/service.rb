@@ -30,3 +30,5 @@ attribute :user_srv_uid, :kind_of => [NilClass, String], :default => nil
 attribute :user_srv_gid, :kind_of => [NilClass, String], :default => nil
 attribute :init_script_prefix, :kind_of => String, :default => ''
 attribute :user_srv_home, :kind_of => String, :default => nil
+
+attribute :config_path, :kind_of => [NilClass, String], :default => nil

@@ -21,9 +21,6 @@ require 'chef/mixin/language'
 include Chef::Mixin::ShellOut
 
 action :enable do
-  config_file = ::File.join(user_conf_dir,
-                            "#{new_resource.service_name}.eye")
-
   unless @current_resource.enabled
     template_suffix = case node['platform_family']
                       when 'implement_me' then node['platform_family']
@@ -75,12 +72,16 @@ end
 
 action :disable do
   if @current_resource.enabled
-    file "#{user_conf_dir}/#{new_resource.service_name}.eye" do
-      action :delete
+    if user_conf_dir
+      file config_file do
+        action :delete
+      end
     end
+
     link "#{node['eye']['init_dir']}/#{new_resource.service_name}" do
       action :delete
     end
+
     new_resource.updated_by_last_action(true)
   end
 end
@@ -164,7 +165,7 @@ def service_running?
 end
 
 def service_enabled?
-  if ::File.exists?("#{user_conf_dir}/#{new_resource.service_name}.eye") &&
+  if ::File.exists?(config_file) &&
       ::File.exists?("#{node['eye']['init_dir']}/#{new_resource.init_script_prefix}#{new_resource.service_name}")
     @current_resource.enabled true
   else
@@ -190,9 +191,14 @@ def service_group
 end
 
 def user_conf_dir
-  ::File.join(node['eye']['conf_dir'], service_user)
+  ::File.join(node['eye']['conf_dir'], service_user) if node['eye']['conf_dir']
 end
 
 def user_log_dir
-  ::File.join(node['eye']['log_dir'], service_user)
+  ::File.join(node['eye']['log_dir'], service_user) if node['eye']['log_dir']
+end
+
+def config_file
+  new_resource.config_path ||
+    ::File.join(user_conf_dir, "#{new_resource.service_name}.eye")
 end

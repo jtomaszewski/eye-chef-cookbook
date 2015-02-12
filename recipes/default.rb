@@ -23,7 +23,9 @@ gem_package "eye" do
 end
 
 %w(conf_dir run_dir log_dir).each do |dir|
-  directory "#{node['eye'][dir]}" do
+  next if node['eye'][dir].nil?
+
+  directory node['eye'][dir] do
     owner node['eye']['user']
     group node['eye']['group']
     recursive true
