@@ -36,6 +36,7 @@ action :enable do
       mode "0755"
       variables(
                 :service_name => new_resource.service_name,
+                :eye_bin => eye_bin,
                 :config_file => config_file,
                 :user => cache_service_user
                 )
