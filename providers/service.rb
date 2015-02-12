@@ -112,27 +112,27 @@ end
 protected
 
 def status_command
-  "#{node['eye']['bin']} info #{new_resource.service_name}"
+  "#{eye_bin} info #{new_resource.service_name}"
 end
 
 def load_command
-  "#{node['eye']['bin']} load #{user_conf_dir}/#{new_resource.service_name}.eye"
+  "#{eye_bin} load #{config_file}"
 end
 
 def load_eye
-  "#{node['eye']['bin']} load"
+  "#{eye_bin} load"
 end
 
 def start_command
-  "#{node['eye']['bin']} start #{new_resource.service_name}"
+  "#{eye_bin} start #{new_resource.service_name}"
 end
 
 def stop_command
-  "#{node['eye']['bin']} stop #{new_resource.service_name}"
+  "#{eye_bin} stop #{new_resource.service_name}"
 end
 
 def restart_command
-  "#{node['eye']['bin']} restart #{new_resource.service_name}"
+  "#{eye_bin} restart #{new_resource.service_name}"
 end
 
 def run_command(command, opts = {})
@@ -201,4 +201,8 @@ end
 def config_file
   new_resource.config_path ||
     ::File.join(user_conf_dir, "#{new_resource.service_name}.eye")
+end
+
+def eye_bin
+  new_resource.bin || node['eye']['bin']
 end

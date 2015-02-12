@@ -32,3 +32,4 @@ attribute :init_script_prefix, :kind_of => String, :default => ''
 attribute :user_srv_home, :kind_of => String, :default => nil
 
 attribute :config_path, :kind_of => [NilClass, String], :default => nil
+attribute :bin, :kind_of => [NilClass, String], :default => nil
