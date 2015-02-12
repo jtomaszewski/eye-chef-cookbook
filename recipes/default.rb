@@ -19,8 +19,8 @@
 gem_package "bundler"
 
 gem_package "eye" do
-  version node['eye']['version']
-end
+  version(node['eye']['version']) if node['eye']['version']
+end unless node['eye']['version'] == false
 
 %w(conf_dir run_dir log_dir).each do |dir|
   next if node['eye'][dir].nil?
