@@ -19,7 +19,7 @@ RUNAS=<%= @user || "root" %>
 execute() {
   CMD="$EYE $1 $2"
   if [ "$USER" = "$RUNAS" ]; then
-    $CMD
+    env $CMD
   else
     su $RUNAS -c "$CMD"
   fi
@@ -29,19 +29,29 @@ case "$1" in
   start)
     echo -n "Loading eye configuration for $SERVICE_NAME"
     execute load $CONFIG_FILE
+    echo -n "Starting eye's application $SERVICE_NAME"
     execute start $SERVICE_NAME
     ;;
   stop)
+    echo -n "Stopping eye's application $SERVICE_NAME"
     execute stop $SERVICE_NAME
     ;;
   restart)
+    echo -n "Loading eye configuration for $SERVICE_NAME"
+    execute load $CONFIG_FILE
+    echo -n "Restarting eye's application $SERVICE_NAME"
     execute restart $SERVICE_NAME
+    ;;
+  reload)
+    echo -n "Reloading eye configuration for $SERVICE_NAME"
+    execute quit
+    execute load $CONFIG_FILE
     ;;
   status)
     execute info $SERVICE_NAME
     ;;
   *)
-    echo "Usage: $0 {start|stop|restart|status}"
+    echo "Usage: $0 {start|stop|restart|reload|status}"
     exit 1
     ;;
 esac

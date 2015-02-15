@@ -21,28 +21,28 @@ require 'chef/mixin/language'
 include Chef::Mixin::ShellOut
 
 action :enable do
-  unless @current_resource.enabled
-    template_suffix = case node['platform_family']
-                      when 'implement_me' then node['platform_family']
-                      else 'lsb'
-                      end
-    cache_service_user = service_user
-    cache_service_group = service_group
-    template "#{node['eye']['init_dir']}/#{new_resource.init_script_prefix}#{new_resource.service_name}" do
-      source "eye_init.#{template_suffix}.erb"
-      cookbook "eye"
-      owner cache_service_user
-      group cache_service_group
-      mode "0755"
-      variables(
-                :service_name => new_resource.service_name,
-                :eye_bin => eye_bin,
-                :config_file => config_file,
-                :user => cache_service_user
-                )
-      only_if { ::File.exists?(config_file) }
-    end
+  template_suffix = case node['platform_family']
+                    when 'implement_me' then node['platform_family']
+                    else 'lsb'
+                    end
+  cache_service_user = service_user
+  cache_service_group = service_group
+  template "#{node['eye']['init_dir']}/#{new_resource.init_script_prefix}#{new_resource.service_name}" do
+    source "eye_init.#{template_suffix}.erb"
+    cookbook "eye"
+    owner cache_service_user
+    group cache_service_group
+    mode "0755"
+    variables(
+              :service_name => new_resource.service_name,
+              :eye_bin => eye_bin,
+              :config_file => config_file,
+              :user => cache_service_user
+              )
+    only_if { ::File.exists?(config_file) }
+  end
 
+  unless @current_resource.enabled
     service "#{new_resource.init_script_prefix}#{new_resource.service_name}" do
       action [ :enable ]
     end
