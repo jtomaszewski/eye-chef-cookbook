@@ -13,7 +13,7 @@
 
 EYE="<%= @eye_bin %>"
 CONFIG_FILE=<%= @config_file %>
-SERVICE_NAME=<%= @service_name %>
+SERVICE_NAME="<%= @service_name %>:$2"
 RUNAS=<%= @user || "root" %>
 
 execute() {
