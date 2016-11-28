@@ -110,7 +110,7 @@ def load_current_resource
   @current_resource
 end
 
-protected
+# protected
 
 def status_command
   "#{eye_bin} info #{new_resource.service_name}"
